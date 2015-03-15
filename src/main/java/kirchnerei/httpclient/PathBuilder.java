@@ -21,47 +21,30 @@
  */
 package kirchnerei.httpclient;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.util.Date;
 
 /**
- * Helper class for using with strings.
+ * A helper class to build urls.
  */
-public final class StringUtils {
+public final class PathBuilder {
 
-	public static boolean isEmpty(String s) {
-		return s == null || s.isEmpty();
-	}
+	public static String toUrl(Object... segments) {
 
-	/**
-	 * Checks whether the value is empty, then it returns the default string, otherwise it returns the value.
-	 *
-	 * @param value the given value
-	 * @param def the default string, if the value is empty
-	 * @return the string
-	 */
-	public static String prepare(String value, String def) {
-		if (isEmpty(value)) {
-			return def;
+		StringBuilder sb = new StringBuilder();
+		for (Object segment : segments) {
+			if (segment == null) {
+				continue;
+			}
+			if (segment instanceof Date) {
+				DateFormat dateFormat = Definition.DEFAULT_DATE_FORMAT;
+				sb.append(Definition.PATH_SEPARATOR).append(dateFormat.format((Date) segment));
+			} else if (segment instanceof String) {
+				sb.append(Definition.PATH_SEPARATOR).append(StringUtils.urlEncode((String) segment, Definition.DEFAULT_ENCODING));
+			} else {
+				sb.append(Definition.PATH_SEPARATOR).append(segment);
+			}
 		}
-		return value;
+		return sb.toString();
 	}
-
-	/**
-	 * Encodes an url part string with the given encoding.
-	 *
-	 * @param urlPart the url string
-	 * @param encoding the encoding
-	 * @return the encoded url string
-	 */
-	public static String urlEncode(String urlPart, String encoding) {
-		try {
-			return URLEncoder.encode(urlPart, encoding);
-		} catch (UnsupportedEncodingException e) {
-			Log.warn(e, "unsupported encoding %s", encoding);
-			return null;
-		}
-	}
-
-	private StringUtils() { }
 }
