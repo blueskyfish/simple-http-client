@@ -72,6 +72,16 @@ HttpClient httpClient = new HttpClient(configuration, clientStore);
 
 ```
 
+## Next Steps
+
+1. Create test cases
+2. Improve the documentation
+3. Fixed issues
+
+## Find an issue
+
+Please insert an issue <https://github.com/mulder3/simple-http-client/issues>
+
 
 
 ## License
