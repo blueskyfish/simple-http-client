@@ -14,6 +14,8 @@ There are some advantage:
 * Simple to configure
 * Simple to use for REST requests
 * No dependencies to other java libraries.
+* Simple to use in Android.
+* Simple to use in other java clients.
 
 
 There are some restriction:
@@ -71,6 +73,29 @@ MyHttpClientStore clientStore = new MyHttpClientStore();
 HttpClient httpClient = new HttpClient(configuration, clientStore);
 
 ```
+
+## Example
+
+```java
+
+HttpConfiguration configuration = ...
+HttpClient httpClient = new HttpClient(configuration, null);
+
+String url = PathBuilder.toUrl("order", date, "last", "3" "days");
+// e.g: url = "/order/2015-02-12/last/3/days"
+
+HttpRequest request = new HttpRequest(Method.GET, url, null); // no data to send
+HttpResponse response = httpClient.execute(request);
+
+if (response.getStatus() == Definition.STATUS_CODE_OKAY) {
+
+	System.out.println(response.getContent());
+}
+
+
+```
+
+
 
 ## Next Steps
 
