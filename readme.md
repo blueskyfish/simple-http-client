@@ -76,6 +76,8 @@ HttpClient httpClient = new HttpClient(configuration, clientStore);
 
 ## Example
 
+### GET
+
 ```java
 
 HttpConfiguration configuration = ...
@@ -95,6 +97,31 @@ if (response.getStatus() == Definition.STATUS_CODE_OKAY) {
 
 ```
 
+### POST
+
+```java
+
+HttpConfiguration configuration = ...
+HttpClient httpClient = new HttpClient(configuration, null);
+
+String url = PathBuilder.toUrl("order", date, "add");
+// e.g: url = "/order/2015-02-12/add"
+
+// send a JSON to the service
+String sendData = "{\"orderId\": 345, \"name\": \"Shoes\"}";
+
+HttpRequest request = new HttpRequest(Method.POST, url, sendData);
+HttpResponse response = httpClient.execute(request);
+
+if (response.getStatus() == Definition.STATUS_CODE_OKAY) {
+
+	String content = response.getContent();
+	// e.g: "{\"status\": \"okay\"}"
+	System.out.println(content);
+}
+
+
+```
 
 
 ## Next Steps
