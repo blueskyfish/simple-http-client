@@ -5,7 +5,72 @@ Kirchnerei &copy; 2015
 
 A simple HTTP client that has no dependencies on other libraries. It will only be used in Java contained classes.
 
+## Overview
 
+The http client manages the request and response from the web service / rest service.
+
+There are some advantage:
+
+* Simple to configure
+* Simple to use for REST requests
+* No dependencies to other java libraries.
+
+
+There are some restriction:
+
+* The client has not a session management
+* The client is not built for request of html pages
+
+
+## Configuration
+
+the http client must have some settings.
+
+Name                      | Description
+------------------------- | --------------------------------------------------
+bufferSize                | The buffer size for reading and writing from / to the http connection stream
+inputEncoding             | The encoding from the input stream
+outputEncoding            | The encoding from the output stream
+userAgent                 | The user agent
+contentType               | The content type
+baseUrl                   | The base url for all requests.
+headerTokenName           | The name of the header for the token. If the header name is empty or null, then the token is not stored.
+
+## Token Client Store
+
+Normally a REST service has no session management. Sometimes there is a header token for the authentication the request.
+In this case you are able to store the token in a separated store in order to get the token in the next request.
+
+How to configure?
+
+* Creates a class with the interface `HttpClientStore`
+
+```java
+public class MyHttpClientStore implements HttpClientStore {
+
+	private String token;
+
+	@Override
+	public void putToken(String token) {
+		this.token = token;
+	}
+
+	@Override
+	public String getToken() {
+		return token;
+	}
+}
+```
+
+* Create an instance and give it to the client constructor
+
+```java
+HttpConfiguration configuration =
+MyHttpClientStore clientStore = new MyHttpClientStore();
+
+HttpClient httpClient = new HttpClient(configuration, clientStore);
+
+```
 
 
 
