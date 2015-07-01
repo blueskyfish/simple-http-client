@@ -1,9 +1,9 @@
 
-Kirchnerei &copy; 2015
 
 # Simple HTTP Client
 
-A simple HTTP client that has no dependencies on other libraries. It will only be used in Java contained classes.
+A simple HTTP client that has no dependencies on other libraries. Only Java classes are used, which are included in
+the Java Runtime.
 
 ## Overview
 
@@ -38,12 +38,13 @@ contentType               | The content type
 baseUrl                   | The base url for all requests.
 headerTokenName           | The name of the header for the token. If the header name is empty or null, then the token is not stored.
 
+
 ## Token Client Store
 
 Normally a REST service has no session management. Sometimes there is a header token for the authentication the request.
 In this case you are able to store the token in a separated store in order to get the token in the next request.
 
-How to configure?
+**How to configure?**
 
 * Creates a class with the interface `HttpClientStore`
 
@@ -73,6 +74,7 @@ MyHttpClientStore clientStore = new MyHttpClientStore();
 HttpClient httpClient = new HttpClient(configuration, clientStore);
 
 ```
+
 
 ## Example
 
@@ -132,13 +134,15 @@ if (response.getStatus() == Definition.STATUS_CODE_OKAY) {
 
 ## Find an issue
 
-Please insert an issue <https://github.com/mulder3/simple-http-client/issues>
+Please insert an issue <https://github.com/blueskyfish/simple-http-client/issues>
 
 
 
 ## License
 
-	Copyright (c) 2015 <Kirchnerei>
+	The MIT License
+
+	Copyright (c) 2015 <BlueSkyFish>
 
 	Permission is hereby granted, free of charge, to any person obtaining a copy
 	of this software and associated documentation files (the "Software"), to deal
