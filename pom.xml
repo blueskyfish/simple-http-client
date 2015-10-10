@@ -46,14 +46,14 @@
 	</licenses>
 
 	<issueManagement>
-		<url>https://github.com/mulder3/simple-http-client/issues</url>
+		<url>https://github.com/blueskyfish/simple-http-client/issues</url>
 		<system>GitHub Issues</system>
 	</issueManagement>
 
 	<scm>
-		<url>https://github.com/mulder3/simple-http-client</url>
-		<connection>scm:git:git://github.com/mulder3/simple-http-client.git</connection>
-		<developerConnection>scm:git:git@github.com:mulder3/simple-http-client.git</developerConnection>
+		<url>https://github.com/blueskyfish/simple-http-client</url>
+		<connection>scm:git:git://github.com/blueskyfish/simple-http-client.git</connection>
+		<developerConnection>scm:git:git@github.com:blueskyfish/simple-http-client.git</developerConnection>
 	</scm>
 
 	<developers>

@@ -57,7 +57,7 @@ public class HttpClient {
 
 	public HttpClient(HttpConfiguration configuration, HttpClientStore clientStore) {
 		if (configuration == null) {
-			throw new IllegalArgumentException("http client needs a configuration. parameter is null");
+			throw new IllegalArgumentException("http client needs a configuration. Parameter is null");
 		}
 		this.configuration = configuration;
 		this.clientStore = clientStore;
@@ -101,8 +101,6 @@ public class HttpClient {
 			closeConnection(dtStart, httpRequest.getUrl(), conn);
 		}
 	}
-
-
 
 	public boolean hasClientStore() {
 		return clientStore != null;
@@ -163,8 +161,8 @@ public class HttpClient {
 		if (!hasClientStore() || (headerTokenName == null || headerTokenName.isEmpty())) {
 			// the header token is not store
 			// two reasons:
-			// -- no client store is present
-			// -- no header name is exist
+			// -- client store is null
+			// -- header name is not exist
 			return;
 		}
 

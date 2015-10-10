@@ -66,4 +66,6 @@ public class Definition {
 	public static final String HEADER_USER_AGENT = "User-Agent";
 
 	public static final String PATH_SEPARATOR = "/";
+
+	private Definition() {}
 }
