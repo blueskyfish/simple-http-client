@@ -21,36 +21,31 @@
  */
 package kirchnerei.httpclient;
 
-/**
- * A response of a http request
- */
-public class HttpResponse {
+import java.io.*;
 
-	private final int statusCode;
+public class ErrorBuilder {
 
-	private final String content;
+    private static String error;
 
-	private final long duration;
-
-	HttpResponse(int statusCode, String content, long duration) {
-		this.statusCode = statusCode;
-		this.content = content;
-        this.duration = duration;
-	}
-
-	public int getStatusCode() {
-		return statusCode;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-    public long getDuration() {
-        return duration;
+    static {
+        InputStream input = ErrorBuilder.class.getResourceAsStream("error.json");
+        try {
+            error = IOUtils.readFrom(input, "UTF-8", 512);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            error = "%s";
+        }
+        finally {
+            IOUtils.close(input);
+        }
     }
 
-	public boolean hasError() {
-		return statusCode > Definition.STATUS_CODE_OKAY;
-	}
+    public static String withMessage(String message) {
+        return String.format(error, message);
+    }
+
+    public static String withMessage(String format, Object... args) {
+        return withMessage(String.format(format, args));
+    }
 }

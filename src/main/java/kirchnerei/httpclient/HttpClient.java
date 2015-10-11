@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -71,31 +72,38 @@ public class HttpClient {
 	 * @throws IllegalArgumentException when the parameter is null.
 	 */
 	public HttpResponse execute(HttpRequest httpRequest) {
-		if (httpRequest == null) {
-			throw new IllegalArgumentException("http client is expected a action parameter, not null");
-		}
-		long dtStart = System.currentTimeMillis();
-		HttpURLConnection conn = null;
-		InputStream input = null;
-		try {
-			conn = createRequest(httpRequest);
-			updateHeaderFromConnection(conn);
-			int statusCode = conn.getResponseCode();
-			String content = null;
-			if (statusCode == STATUS_CODE_OKAY) {
-				input = conn.getInputStream();
-			} else if (statusCode >= STATUS_CODE_INTERNAL_SERVER) {
-				content = "{\"title\": \"Internal Server Error\", \"message\": \"Unexpected error from the server.\"}";
-			} else {
-				input = conn.getErrorStream();
-			}
-			if (input != null) {
-				content = IOUtils.readFrom(input, getInputEncoding(), getBufferSize());
-			}
-			return new HttpResponse(statusCode, content);
-		} catch (IOException e) {
-			throw new HttpClientException(e, "can not read the result content");
-		} finally {
+        if (httpRequest == null) {
+            throw new IllegalArgumentException("http client is expected a action parameter, not null");
+        }
+        long dtStart = System.currentTimeMillis();
+        HttpURLConnection conn = null;
+        InputStream input = null;
+        try {
+            conn = createRequest(httpRequest);
+            updateHeaderFromConnection(conn);
+            int statusCode = conn.getResponseCode();
+            String content = null;
+            if (statusCode == STATUS_CODE_OKAY) {
+                input = conn.getInputStream();
+            } else if (statusCode >= STATUS_CODE_INTERNAL_SERVER) {
+                content = ErrorBuilder.withMessage("Unexpected error from the server");
+            } else {
+                input = conn.getErrorStream();
+            }
+            if (input != null) {
+                content = IOUtils.readFrom(input, getInputEncoding(), getBufferSize());
+            }
+            return new HttpResponse(statusCode, content, calcDuration(dtStart));
+        }
+        catch (ConnectException e) {
+            return new HttpResponse(STATUS_CODE_INTERNAL_SERVER, ErrorBuilder.withMessage("Connection refused"),
+                calcDuration(dtStart));
+        }
+        catch (IOException e) {
+            return new HttpResponse(STATUS_CODE_INTERNAL_SERVER, ErrorBuilder.withMessage("IO Exception (%s)",
+                e.getMessage()), calcDuration(dtStart));
+        }
+		finally {
 			IOUtils.close(input);
 			closeConnection(conn);
 		}
@@ -261,4 +269,7 @@ public class HttpClient {
 		return value;
 	}
 
+    static long calcDuration(long startTime) {
+        return System.currentTimeMillis() - startTime;
+    }
 }
