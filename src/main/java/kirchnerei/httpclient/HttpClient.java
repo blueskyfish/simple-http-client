@@ -92,13 +92,12 @@ public class HttpClient {
 			if (input != null) {
 				content = IOUtils.readFrom(input, getInputEncoding(), getBufferSize());
 			}
-			Log.debug("[%s] %s", statusCode, content);
 			return new HttpResponse(statusCode, content);
 		} catch (IOException e) {
 			throw new HttpClientException(e, "can not read the result content");
 		} finally {
 			IOUtils.close(input);
-			closeConnection(dtStart, httpRequest.getUrl(), conn);
+			closeConnection(conn);
 		}
 	}
 
@@ -121,7 +120,6 @@ public class HttpClient {
 	synchronized void storeHeaderToken(String token) {
 		if (hasClientStore()) {
 			clientStore.putToken(token);
-			Log.debug("store the header token [%s]", token);
 		}
 	}
 
@@ -249,11 +247,10 @@ public class HttpClient {
 		return bufferSize;
 	}
 
-	static void closeConnection(long dtStart, String url, HttpURLConnection conn) {
+	static void closeConnection(HttpURLConnection conn) {
 		if (conn != null) {
 			conn.disconnect();
 		}
-		Log.debug("connection from '%s' is closed [%s ms]", url, (System.currentTimeMillis() - dtStart));
 	}
 
 

@@ -34,7 +34,7 @@ public final class IOUtils {
 				c.close();
 			}
 		} catch (IOException e) {
-			Log.warn(e, "closing problem??");
+			e.printStackTrace();
 		}
 	}
 

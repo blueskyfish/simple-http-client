@@ -58,7 +58,6 @@ public final class StringUtils {
 		try {
 			return URLEncoder.encode(urlPart, encoding);
 		} catch (UnsupportedEncodingException e) {
-			Log.warn(e, "unsupported encoding %s", encoding);
 			return null;
 		}
 	}

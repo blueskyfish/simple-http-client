@@ -27,7 +27,7 @@
 
 	<groupId>kirchnerei</groupId>
 	<artifactId>simple-http-client</artifactId>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<packaging>jar</packaging>
 
 	<name>Simple Http Client</name>
@@ -35,7 +35,7 @@
 		A simple HTTP client that has no dependencies on other libraries.
 		It will only be used in Java contained classes.
 	</description>
-	<url>https://github.com/mulder3/simple-http-client</url>
+	<url>https://github.com/blueskyfish/simple-http-client</url>
 
 	<licenses>
 		<license>
