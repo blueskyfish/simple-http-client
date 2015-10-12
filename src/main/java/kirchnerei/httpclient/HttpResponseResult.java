@@ -21,27 +21,45 @@
  */
 package kirchnerei.httpclient;
 
-public class HttpClientException extends Exception {
+/**
+ * A response of a http request
+ */
+public class HttpResponseResult implements HttpResponse {
 
-	private final Object[] args;
+	private final int statusCode;
 
-	public HttpClientException(String message, Object... args) {
-		super(message);
-		this.args = args;
-	}
+	private final String content;
 
-	public HttpClientException(Throwable cause, String message, Object... args) {
-		super(message, cause);
-		this.args = args;
+	private final long duration;
+
+	HttpResponseResult(int statusCode, String content, long duration) {
+		this.statusCode = statusCode;
+		this.content = content;
+        this.duration = duration;
 	}
 
 	@Override
-	public String getMessage() {
-		String message = super.getMessage();
-		if (args != null && args.length > 0) {
-			message = String.format(message, args);
-		}
-		return message;
+	public int getStatusCode() {
+		return statusCode;
 	}
 
+	@Override
+	public String getContent() {
+		return content;
+	}
+
+    @Override
+	public long getDuration() {
+        return duration;
+    }
+
+	@Override
+	public boolean hasError() {
+		return statusCode > Definition.STATUS_CODE_OKAY;
+	}
+
+	@Override
+	public Throwable getError() {
+		return null;
+	}
 }

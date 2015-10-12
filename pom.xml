@@ -27,7 +27,7 @@
 
 	<groupId>kirchnerei</groupId>
 	<artifactId>simple-http-client</artifactId>
-	<version>0.1.1</version>
+	<version>0.2.0</version>
 	<packaging>jar</packaging>
 
 	<name>Simple Http Client</name>

@@ -21,24 +21,27 @@
  */
 package kirchnerei.httpclient;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class ErrorBuilder {
 
-    private static String error;
+    private static final String error;
 
     static {
         InputStream input = ErrorBuilder.class.getResourceAsStream("error.json");
+        String s;
         try {
-            error = IOUtils.readFrom(input, "UTF-8", 512);
+            s = IOUtils.readFrom(input, Definition.DEFAULT_ENCODING, 512);
         }
         catch (IOException e) {
             e.printStackTrace();
-            error = "%s";
+            s = "%s";
         }
         finally {
             IOUtils.close(input);
         }
+        error = s;
     }
 
     public static String withMessage(String message) {

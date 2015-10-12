@@ -68,12 +68,13 @@ public class HttpClient {
 	 * Starts a request to the server with the given url and returns the response.
 	 *
 	 * @param httpRequest contains the url, request method and optional the send data.
-	 * @return the result
+	 * @return the result if an exception is thrown, then it returns a {@link HttpResponseError} instance that has the
+     * exception. If the
 	 * @throws IllegalArgumentException when the parameter is null.
 	 */
 	public HttpResponse execute(HttpRequest httpRequest) {
         if (httpRequest == null) {
-            throw new IllegalArgumentException("http client is expected a action parameter, not null");
+            throw new IllegalArgumentException("http client is expected a http request parameter, not null");
         }
         long dtStart = System.currentTimeMillis();
         HttpURLConnection conn = null;
@@ -93,19 +94,22 @@ public class HttpClient {
             if (input != null) {
                 content = IOUtils.readFrom(input, getInputEncoding(), getBufferSize());
             }
-            return new HttpResponse(statusCode, content, calcDuration(dtStart));
+            return new HttpResponseResult(statusCode, content, calcDuration(dtStart));
         }
         catch (ConnectException e) {
-            return new HttpResponse(STATUS_CODE_INTERNAL_SERVER, ErrorBuilder.withMessage("Connection refused"),
-                calcDuration(dtStart));
+            return new HttpResponseError(e, STATUS_CODE_INTERNAL_SERVER, calcDuration(dtStart));
         }
         catch (IOException e) {
-            return new HttpResponse(STATUS_CODE_INTERNAL_SERVER, ErrorBuilder.withMessage("IO Exception (%s)",
-                e.getMessage()), calcDuration(dtStart));
+            return new HttpResponseError(e, STATUS_CODE_INTERNAL_SERVER, calcDuration(dtStart));
+        }
+        catch (HttpClientException e) {
+            return new HttpResponseError(e, STATUS_CODE_INTERNAL_SERVER, calcDuration(dtStart));
         }
 		finally {
 			IOUtils.close(input);
-			closeConnection(conn);
+			if (conn != null) {
+                conn.disconnect();
+            }
 		}
 	}
 
@@ -132,7 +136,7 @@ public class HttpClient {
 	}
 
 
-	String buildUrl(String url) {
+	String buildUrl(String url) throws HttpClientException {
 		String baseUrl = configuration.getBaseUrl();
 		if (StringUtils.isEmpty(baseUrl)) {
 			throw new HttpClientException("missing the base url");
@@ -140,7 +144,7 @@ public class HttpClient {
 		return baseUrl + url;
 	}
 
-	HttpURLConnection createRequest(HttpRequest httpRequest) {
+	HttpURLConnection createRequest(HttpRequest httpRequest) throws HttpClientException {
 		HttpURLConnection conn;
 		try {
 			conn = (HttpURLConnection) new URL(buildUrl(httpRequest.getUrl())).openConnection();
@@ -158,7 +162,7 @@ public class HttpClient {
 	}
 
 	/**
-	 * Update the header from the response (only the ebbemeister token is important).
+	 * Update the header from the response (only the simple http token is important).
 	 *
 	 * @param conn the connection with response.
 	 */
@@ -209,7 +213,7 @@ public class HttpClient {
 		}
 	}
 
-	void setOutputToConnection(HttpRequest httpRequest, HttpURLConnection conn) {
+	void setOutputToConnection(HttpRequest httpRequest, HttpURLConnection conn) throws HttpClientException {
 		if (httpRequest.hasSendData()) {
 			conn.setDoOutput(true);
 			OutputStream output = null;
@@ -253,12 +257,6 @@ public class HttpClient {
 			bufferSize =MAX_BUFFER_SIZE;
 		}
 		return bufferSize;
-	}
-
-	static void closeConnection(HttpURLConnection conn) {
-		if (conn != null) {
-			conn.disconnect();
-		}
 	}
 
 
