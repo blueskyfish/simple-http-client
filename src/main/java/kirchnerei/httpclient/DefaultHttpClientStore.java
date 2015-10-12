@@ -23,15 +23,15 @@ package kirchnerei.httpclient;
 
 public class DefaultHttpClientStore implements HttpClientStore {
 
-	private String token;
+    private String token;
 
-	@Override
-	public void putToken(String token) {
-		this.token = token;
-	}
+    @Override
+    public void putToken(String token) {
+        this.token = token;
+    }
 
-	@Override
-	public String getToken() {
-		return token;
-	}
+    @Override
+    public String getToken() {
+        return token;
+    }
 }

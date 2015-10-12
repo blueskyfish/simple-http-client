@@ -26,11 +26,11 @@ package kirchnerei.httpclient;
  */
 public final class HttpRequest {
 
-	private final String url;
+    private final String url;
 
-	private final Method method;
+    private final Method method;
 
-	private final String sendData;
+    private final String sendData;
 
     /**
      * Factory method to create a GET http request.
@@ -45,7 +45,7 @@ public final class HttpRequest {
     /**
      * Factory method to create a POST http request.
      *
-     * @param url the url
+     * @param url      the url
      * @param sendData the sending data
      * @return the http request
      */
@@ -56,7 +56,7 @@ public final class HttpRequest {
     /**
      * Factory method to create a PUT http request
      *
-     * @param url the url
+     * @param url      the url
      * @param sendData the sending data
      * @return the http request
      */
@@ -77,40 +77,40 @@ public final class HttpRequest {
     /**
      * Construct creates the http request.
      *
-     * @param url the url
-     * @param method the http method. The parameter can not be null.
+     * @param url      the url
+     * @param method   the http method. The parameter can not be null.
      * @param sendData send data.
      */
-	public HttpRequest(String url, Method method, String sendData) {
-		if (method == null) {
+    public HttpRequest(String url, Method method, String sendData) {
+        if (method == null) {
             throw new IllegalArgumentException("parameter 'method' is null");
         }
-		this.url = url;
-		this.method = method;
-		this.sendData = sendData;
-		if (!method.allowSend() && sendData != null && !sendData.isEmpty()) {
-			throw new IllegalArgumentException("send data is not allow in method '" + method + "'");
-		}
-	}
+        this.url = url;
+        this.method = method;
+        this.sendData = sendData;
+        if (!method.allowSend() && sendData != null && !sendData.isEmpty()) {
+            throw new IllegalArgumentException("send data is not allow in method '" + method + "'");
+        }
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public String getUrl() {
+        return url;
+    }
 
-	public Method getMethod() {
-		return method;
-	}
+    public Method getMethod() {
+        return method;
+    }
 
-	public String getSendData() {
-		return sendData;
-	}
+    public String getSendData() {
+        return sendData;
+    }
 
-	public boolean hasSendData() {
-		return method.allowSend() && sendData != null && !sendData.isEmpty();
-	}
+    public boolean hasSendData() {
+        return method.allowSend() && sendData != null && !sendData.isEmpty();
+    }
 
-	@Override
-	public String toString() {
-		return "HttpRequest {" + " " + method + ": [" + url + "] " + '}';
-	}
+    @Override
+    public String toString() {
+        return "HttpRequest {" + " " + method + ": [" + url + "] " + '}';
+    }
 }

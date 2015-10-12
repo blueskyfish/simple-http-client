@@ -26,12 +26,12 @@ package kirchnerei.httpclient;
  */
 public enum Method {
 
-	GET,
-	PUT,
-	POST,
-	DELETE;
+    GET,
+    PUT,
+    POST,
+    DELETE;
 
-	public boolean allowSend() {
-		return this == PUT || this == POST;
-	}
+    public boolean allowSend() {
+        return this == PUT || this == POST;
+    }
 }

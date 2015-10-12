@@ -33,12 +33,10 @@ public class ErrorBuilder {
         String s;
         try {
             s = IOUtils.readFrom(input, Definition.DEFAULT_ENCODING, 512);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             s = "%s";
-        }
-        finally {
+        } finally {
             IOUtils.close(input);
         }
         error = s;

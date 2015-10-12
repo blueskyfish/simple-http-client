@@ -26,7 +26,7 @@ package kirchnerei.httpclient;
  */
 public interface HttpClientStore {
 
-	void putToken(String token);
+    void putToken(String token);
 
-	String getToken();
+    String getToken();
 }

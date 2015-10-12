@@ -26,40 +26,40 @@ package kirchnerei.httpclient;
  */
 public class HttpResponseResult implements HttpResponse {
 
-	private final int statusCode;
+    private final int statusCode;
 
-	private final String content;
+    private final String content;
 
-	private final long duration;
+    private final long duration;
 
-	HttpResponseResult(int statusCode, String content, long duration) {
-		this.statusCode = statusCode;
-		this.content = content;
+    HttpResponseResult(int statusCode, String content, long duration) {
+        this.statusCode = statusCode;
+        this.content = content;
         this.duration = duration;
-	}
-
-	@Override
-	public int getStatusCode() {
-		return statusCode;
-	}
-
-	@Override
-	public String getContent() {
-		return content;
-	}
+    }
 
     @Override
-	public long getDuration() {
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    @Override
+    public String getContent() {
+        return content;
+    }
+
+    @Override
+    public long getDuration() {
         return duration;
     }
 
-	@Override
-	public boolean hasError() {
-		return statusCode > Definition.STATUS_CODE_OKAY;
-	}
+    @Override
+    public boolean hasError() {
+        return statusCode > Definition.STATUS_CODE_OKAY;
+    }
 
-	@Override
-	public Throwable getError() {
-		return null;
-	}
+    @Override
+    public Throwable getError() {
+        return null;
+    }
 }
