@@ -1,25 +1,9 @@
 /*
- * Copyright (c) 2015 BlueSkyFish
+ * The MIT License (MIT)
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * Copyright (c) 2016 BlueSkyFish
  */
-package kirchnerei.httpclient;
+package de.blueskyfish.httpclient;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,8 +16,6 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import static kirchnerei.httpclient.Definition.*;
 
 /**
  * The http client manages the request and responses to the external web service / rest service.
@@ -58,7 +40,7 @@ public class HttpClient {
 
     public HttpClient(HttpConfiguration configuration, HttpClientStore clientStore) {
         if (configuration == null) {
-            throw new IllegalArgumentException("http client needs a configuration. Parameter is null");
+            throw new IllegalArgumentException("HTCLT-001: http client needs a configuration. Parameter is null");
         }
         this.configuration = configuration;
         this.clientStore = clientStore;
@@ -74,7 +56,7 @@ public class HttpClient {
      */
     public HttpResponse execute(HttpRequest httpRequest) {
         if (httpRequest == null) {
-            throw new IllegalArgumentException("http client is expected a http request parameter, not null");
+            throw new IllegalArgumentException("HTCLT-002: http client is expected a http request parameter, not null");
         }
         long dtStart = System.currentTimeMillis();
         HttpURLConnection conn = null;
@@ -84,9 +66,9 @@ public class HttpClient {
             updateHeaderFromConnection(conn);
             int statusCode = conn.getResponseCode();
             String content = null;
-            if (statusCode == STATUS_CODE_OKAY) {
+            if (statusCode == Definition.STATUS_CODE_OKAY) {
                 input = conn.getInputStream();
-            } else if (statusCode >= STATUS_CODE_INTERNAL_SERVER) {
+            } else if (statusCode >= Definition.STATUS_CODE_INTERNAL_SERVER) {
                 content = ErrorBuilder.withMessage("Unexpected error from the server");
             } else {
                 input = conn.getErrorStream();
@@ -96,11 +78,11 @@ public class HttpClient {
             }
             return new HttpResponseResult(statusCode, content, calcDuration(dtStart));
         } catch (ConnectException e) {
-            return new HttpResponseError(e, STATUS_CODE_INTERNAL_SERVER, calcDuration(dtStart));
+            return new HttpResponseError(e, Definition.STATUS_CODE_INTERNAL_SERVER, calcDuration(dtStart));
         } catch (IOException e) {
-            return new HttpResponseError(e, STATUS_CODE_INTERNAL_SERVER, calcDuration(dtStart));
+            return new HttpResponseError(e, Definition.STATUS_CODE_INTERNAL_SERVER, calcDuration(dtStart));
         } catch (HttpClientException e) {
-            return new HttpResponseError(e, STATUS_CODE_INTERNAL_SERVER, calcDuration(dtStart));
+            return new HttpResponseError(e, Definition.STATUS_CODE_INTERNAL_SERVER, calcDuration(dtStart));
         } finally {
             IOUtils.close(input);
             if (conn != null) {
@@ -135,7 +117,7 @@ public class HttpClient {
     String buildUrl(String url) throws HttpClientException {
         String baseUrl = configuration.getBaseUrl();
         if (StringUtils.isEmpty(baseUrl)) {
-            throw new HttpClientException("missing the base url");
+            throw new HttpClientException("HTCLT-003: missing the base url");
         }
         return baseUrl + url;
     }
@@ -145,12 +127,12 @@ public class HttpClient {
         try {
             conn = (HttpURLConnection) new URL(buildUrl(httpRequest.getUrl())).openConnection();
         } catch (IOException e) {
-            throw new HttpClientException(e, "malformed request \"%s\"", httpRequest.getUrl());
+            throw new HttpClientException(e, "HTCLT-004: malformed request \"%s\"", httpRequest.getUrl());
         }
         try {
             conn.setRequestMethod(httpRequest.getMethod().toString());
         } catch (ProtocolException e) {
-            throw new HttpClientException(e, "method \"%s\" is not allow ", httpRequest.getMethod());
+            throw new HttpClientException(e, "HTCLT-005: method \"%s\" is not allow ", httpRequest.getMethod());
         }
         setHeadersToConnection(conn);
         setOutputToConnection(httpRequest, conn);
@@ -189,11 +171,11 @@ public class HttpClient {
 
     void setHeadersToConnection(HttpURLConnection conn) {
 
-        if (!headers.containsKey(HEADER_CONTENT_TYPE)) {
-            headers.put(HEADER_CONTENT_TYPE, getContentType());
+        if (!headers.containsKey(Definition.HEADER_CONTENT_TYPE)) {
+            headers.put(Definition.HEADER_CONTENT_TYPE, getContentType());
         }
-        if (!headers.containsKey(HEADER_USER_AGENT)) {
-            headers.put(HEADER_USER_AGENT, getUserAgent());
+        if (!headers.containsKey(Definition.HEADER_USER_AGENT)) {
+            headers.put(Definition.HEADER_USER_AGENT, getUserAgent());
         }
 
         // set always the header token
@@ -218,7 +200,7 @@ public class HttpClient {
                 Writer writer = new OutputStreamWriter(output, getOutputEncoding());
                 writer.append(httpRequest.getSendData()).flush();
             } catch (IOException e) {
-                throw new HttpClientException(e, "output can not written <%s: %s>",
+                throw new HttpClientException(e, "HTCLT-007: output can not written <%s: %s>",
                     httpRequest.getMethod(), httpRequest.getUrl()
                 );
             } finally {
@@ -228,29 +210,29 @@ public class HttpClient {
     }
 
     String getContentType() {
-        return StringUtils.prepare(configuration.getContentType(), DEFAULT_CONTENT_TYPE);
+        return StringUtils.prepare(configuration.getContentType(), Definition.DEFAULT_CONTENT_TYPE);
     }
 
     String getUserAgent() {
-        return StringUtils.prepare(configuration.getUserAgent(), DEFAULT_USER_AGENT);
+        return StringUtils.prepare(configuration.getUserAgent(), Definition.DEFAULT_USER_AGENT);
     }
 
     String getOutputEncoding() {
-        return StringUtils.prepare(configuration.getOutputEncoding(), DEFAULT_OUTPUT_ENCODING);
+        return StringUtils.prepare(configuration.getOutputEncoding(), Definition.DEFAULT_OUTPUT_ENCODING);
     }
 
     String getInputEncoding() {
-        return StringUtils.prepare(configuration.getInputEncoding(), DEFAULT_INPUT_ENCODING);
+        return StringUtils.prepare(configuration.getInputEncoding(), Definition.DEFAULT_INPUT_ENCODING);
     }
 
     int getBufferSize() {
-        int bufferSize = prepare(configuration.getBufferSize(), DEFAULT_BUFFER_SIZE);
+        int bufferSize = prepare(configuration.getBufferSize(), Definition.DEFAULT_BUFFER_SIZE);
 
-        if (bufferSize < MIN_BUFFER_SIZE) {
-            bufferSize = MIN_BUFFER_SIZE;
+        if (bufferSize < Definition.MIN_BUFFER_SIZE) {
+            bufferSize = Definition.MIN_BUFFER_SIZE;
         }
-        if (bufferSize > MAX_BUFFER_SIZE) {
-            bufferSize = MAX_BUFFER_SIZE;
+        if (bufferSize > Definition.MAX_BUFFER_SIZE) {
+            bufferSize = Definition.MAX_BUFFER_SIZE;
         }
         return bufferSize;
     }

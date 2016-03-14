@@ -1,4 +1,9 @@
-package kirchnerei.httpclient;
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2016 BlueSkyFish
+ */
+package de.blueskyfish.httpclient;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
