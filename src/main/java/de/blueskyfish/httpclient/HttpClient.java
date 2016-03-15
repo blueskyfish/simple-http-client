@@ -174,6 +174,9 @@ public class HttpClient {
         if (!headers.containsKey(Definition.HEADER_CONTENT_TYPE)) {
             headers.put(Definition.HEADER_CONTENT_TYPE, getContentType());
         }
+        if (!headers.containsKey(Definition.HEADER_ACCEPT)) {
+            headers.put(Definition.HEADER_ACCEPT, getContentType());
+        }
         if (!headers.containsKey(Definition.HEADER_USER_AGENT)) {
             headers.put(Definition.HEADER_USER_AGENT, getUserAgent());
         }

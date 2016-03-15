@@ -47,6 +47,8 @@ public class Definition {
 
     public static final String HEADER_CONTENT_TYPE = "Content-Type";
 
+    public static final String HEADER_ACCEPT = "Accept";
+
     public static final String HEADER_USER_AGENT = "User-Agent";
 
     public static final String PATH_SEPARATOR = "/";
