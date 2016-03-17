@@ -14,8 +14,11 @@ import java.util.Date;
 public final class PathBuilder {
 
     public static String toUrl(Object... segments) {
+        return toUrl(null, segments);
+   }
 
-        StringBuilder sb = new StringBuilder();
+    public static String toUrl(String baseUrl, Object... segments) {
+        StringBuilder sb = StringUtils.isEmpty(baseUrl) ? new StringBuilder() : new StringBuilder(baseUrl);
         for (Object segment : segments) {
             if (segment == null) {
                 continue;
@@ -24,7 +27,9 @@ public final class PathBuilder {
                 DateFormat dateFormat = Definition.DEFAULT_DATE_FORMAT;
                 sb.append(Definition.PATH_SEPARATOR).append(dateFormat.format((Date) segment));
             } else if (segment instanceof String) {
-                sb.append(Definition.PATH_SEPARATOR).append(StringUtils.urlEncode((String) segment, Definition.DEFAULT_ENCODING));
+                sb.append(Definition.PATH_SEPARATOR).append(
+                        StringUtils.urlEncode((String) segment, Definition.DEFAULT_ENCODING)
+                );
             } else {
                 sb.append(Definition.PATH_SEPARATOR).append(segment);
             }
