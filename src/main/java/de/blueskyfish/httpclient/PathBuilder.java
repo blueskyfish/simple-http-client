@@ -18,7 +18,8 @@ public final class PathBuilder {
    }
 
     public static String toUrl(String baseUrl, Object... segments) {
-        StringBuilder sb = StringUtils.isEmpty(baseUrl) ? new StringBuilder() : new StringBuilder(baseUrl);
+        String tempUrl = encodeBaseUrl(baseUrl);
+        StringBuilder sb = StringUtils.isEmpty(tempUrl) ? new StringBuilder() : new StringBuilder(tempUrl);
         for (Object segment : segments) {
             if (segment == null) {
                 continue;
@@ -35,5 +36,16 @@ public final class PathBuilder {
             }
         }
         return sb.toString();
+    }
+
+    static String encodeBaseUrl(String baseUrl) {
+        if (StringUtils.isEmpty(baseUrl)) {
+            return null;
+        }
+        String tempUrl = StringUtils.urlEncode(baseUrl, Definition.DEFAULT_ENCODING);
+        if (tempUrl != null && !tempUrl.startsWith(Definition.PATH_SEPARATOR)) {
+            return Definition.PATH_SEPARATOR + tempUrl;
+        }
+        return tempUrl;
     }
 }
