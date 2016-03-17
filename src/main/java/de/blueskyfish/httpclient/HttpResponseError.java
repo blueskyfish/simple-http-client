@@ -50,4 +50,9 @@ public class HttpResponseError implements HttpResponse {
     public boolean hasError() {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "HttpResponse ( " + statusCode + ", error=" + error.getClass().getName() + ", duration=" + duration + " )";
+    }
 }

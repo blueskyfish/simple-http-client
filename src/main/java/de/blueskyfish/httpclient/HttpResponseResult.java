@@ -46,4 +46,10 @@ public class HttpResponseResult implements HttpResponse {
     public Throwable getError() {
         return null;
     }
+
+    @Override
+    public String toString() {
+        return "HttpResponse ( " + statusCode + ", contentLength=" +
+                (content != null ? content.length() : -1) + ", duration=" + duration + " )";
+    }
 }

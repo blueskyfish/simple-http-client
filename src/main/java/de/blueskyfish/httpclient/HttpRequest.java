@@ -95,6 +95,6 @@ public final class HttpRequest {
 
     @Override
     public String toString() {
-        return "HttpRequest { " + method + ": [" + url + "] }";
+        return "HttpRequest ( " + method + ": " + url + " )";
     }
 }
